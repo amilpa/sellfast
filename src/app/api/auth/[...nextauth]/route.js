@@ -9,6 +9,17 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_SECRET
     })
   ],
+  callbacks: {
+    async signIn(data) {
+      const res = await fetch(`${process.env.API_URL}/api/user/register`, {
+        method: "POST",
+        body: JSON.stringify(data.user)
+      })
+      // console.log(data.user)
+      // console.log(res.status)
+      return true;
+    }
+  }
 }
 
 const handler = NextAuth(authOptions)

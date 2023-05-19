@@ -6,8 +6,11 @@ export default function SignInButton() {
   const callbackUrl = "http://localhost:3000";
 
   return (
-    <button onClick={() => signIn("google", { callbackUrl })}>
-      SignInButton
+    <button
+      onClick={() => signIn("google", { callbackUrl })}
+      className="bg-white text-black mr-6 rounded-md px-5 hover:bg-black hover:text-white hover:shadow-sm hover:shadow-white transition-all"
+    >
+      Sign In
     </button>
   );
 }

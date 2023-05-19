@@ -3,21 +3,13 @@ import SignOutButton from "./components/SignOutButton";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
   if (!session) {
-    return (
-      <div>
-        <SignInButton />
-      </div>
-    );
+    redirect("/login");
+  } else {
+    redirect("/dashboard");
   }
-
-  return (
-    <div>
-      <p>Hello {session.user.name}</p>
-      <SignOutButton />
-    </div>
-  );
 }
