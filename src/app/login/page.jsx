@@ -10,7 +10,7 @@ export default async function Login() {
   }
   return (
     <div className="min-h-screen">
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2">
+      <div className="w-max absolute top-[30%] md:top-[25%] left-1/2 -translate-x-1/2">
         <h1 className="text-center text-3xl font-semibold">
           Log in to SellFast
         </h1>
