@@ -7,7 +7,7 @@ export default function GoogleSignIn() {
   return (
     <button
       onClick={() => signIn("google", callbackUrl)}
-      className="w-[250px] text-lg py-2 rounded-md flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 transition-all"
+      className="w-[300px] text-lg py-[15px] md:py-3 rounded-md flex items-center justify-center gap-3 bg-blue-700 hover:bg-blue-600 transition-all"
     >
       <BsGoogle />
       Continue with Google
