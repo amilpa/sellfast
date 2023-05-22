@@ -3,14 +3,14 @@ import { checkUserSignIn, createUserSignUp } from "@/models/user";
 
 export async function POST(req) {
   try {
-    const check = await checkUserSignIn(req.body.email)
-    if (!check) {
-      await createUserSignUp(req.body)
+    const res = await req.json()
+    const check = await checkUserSignIn({ email: res.email })
+    if (check.length === 0) {
+      await createUserSignUp(res)
     }
-    return NextResponse.status(200).json({ message: "Success" })
+    return NextResponse.json({ message: "Success" })
 
   } catch (error) {
     console.log(error.message)
-    console.log(JSON.parse(req.body))
   }
 }

@@ -13,10 +13,11 @@ export const authOptions = {
     async signIn(data) {
       const res = await fetch(`${process.env.API_URL}/api/user/register`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(data.user)
       })
-      // console.log(data.user)
-      // console.log(res.status)
       return true;
     }
   }
