@@ -11,7 +11,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn(data) {
-      const res = await fetch(`${process.env.API_URL}/api/user/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -19,6 +19,10 @@ export const authOptions = {
         body: JSON.stringify(data.user)
       })
       return true;
+    },
+    async session({ session, token }) {
+      session.user.id = token.sub
+      return session
     }
   }
 }
