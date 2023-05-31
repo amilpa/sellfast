@@ -6,11 +6,21 @@ export async function createUserSignUp({ id, name, email, image }) {
   await pool.query(`INSERT INTO user_data(user_id,name,email,imageurl) values(${id},'${name}','${email}','${image}')`)
 }
 
-export async function checkUserSignIn({ email }) {
+export async function getUser({ id }) {
+  const data = await pool.query(`SELECT * from user_data WHERE user_id='${id}'`)
+  return data
+}
+
+export async function checkUserRegister({ email }) {
   const data = await pool.query(`SELECT * FROM user_data WHERE email = '${email}' `)
-  return data.rows
+  if (data.rows.length === 0) {
+    return false
+  }
+  else {
+    return true
+  }
 }
 
 export async function updateUserBalance({ balance, user_id }) {
-  await pool.query(`UPDATE user_data SET balance = ${balance} WHERE user_id = ${user_id} `)
+  await pool.query(`UPDATE user_data SET balance = ${balance} WHERE user_id = '${user_id}' `)
 }
