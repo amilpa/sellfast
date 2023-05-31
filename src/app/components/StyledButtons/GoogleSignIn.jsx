@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import { BsGoogle } from "react-icons/bs";
 
 export default function GoogleSignIn() {
-  const callbackUrl = "http://localhost:3000/dashboard";
+  const callbackUrl = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`;
   return (
     <button
       onClick={() => signIn("google", callbackUrl)}

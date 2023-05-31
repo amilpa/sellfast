@@ -22,6 +22,7 @@ export default function ProfileIcon({ session, children }) {
         height={30}
         className="rounded-[50%] mr-4 cursor-pointer"
         onClick={() => setShow(!show)}
+        alt="profile"
       />
       <AnimatePresence>
         {show && (

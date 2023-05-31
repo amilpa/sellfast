@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 
 export default function SignInButton() {
-  const callbackUrl = "http://localhost:3000";
+  const callbackUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
   return (
     <button

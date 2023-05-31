@@ -8,6 +8,7 @@ export default function ProfileIcon({ session }) {
       width={75}
       height={30}
       className="rounded-[50%] m-auto cursor-pointer"
+      alt="profile"
     />
   );
 }
