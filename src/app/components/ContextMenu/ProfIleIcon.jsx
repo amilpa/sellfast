@@ -7,12 +7,14 @@ export default function ProfileIcon({ session, children }) {
   const [show, setShow] = useState(false);
   const dropdownRef = useRef();
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setShow(false);
-    }
-  };
-  window.addEventListener("mousedown", handleClickOutside);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShow(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div ref={dropdownRef} className="relative flex justify-end">

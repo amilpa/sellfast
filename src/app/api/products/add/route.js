@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { imagekit } from "@/config/imagekit";
+import { UploadImage } from "@/utils/upload";
 
 export async function POST(req) {
   try {
     const data = await req.formData()
-    const file = data.get('File')
-    imagekit.upload({
-    })
+    const uploadData = new FormData()
+    uploadData.append('file', data.get("File"))
+    uploadData.append('fileName', "File")
+    uploadData.append('folder', '/sellfast/products/')
+    await UploadImage(uploadData)
     return NextResponse.json({ message: "Successful" })
   } catch (error) {
     return NextResponse.json({ message: error.message })
