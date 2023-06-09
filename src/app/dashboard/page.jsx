@@ -21,23 +21,24 @@ export default async function page() {
         <CardButton
           title="Sell new Product"
           content="Sell anything and everything you want and leave everything else to us."
-          children={<MdSell className="text-3xl text-[#7928ca]" />}
           href="/sell"
-        />
+        >
+          <MdSell className="text-3xl text-[#7928ca]" />
+        </CardButton>
         <CardButton
           title="Go to store"
           content="Buy fast and safe.We have a wide variety of goods available this week."
-          children={
-            <AiOutlineShoppingCart className="text-3xl text-[#0063d6]" />
-          }
           href="/store"
-        />
+        >
+          <AiOutlineShoppingCart className="text-3xl text-[#0063d6]" />
+        </CardButton>
         <CardButton
           title="Profile"
           content="Buy fast and safe.We have a wide variety of goods available this week."
-          children={<CgProfile className="text-3xl text-[#f40386]" />}
           href="/profile"
-        />
+        >
+          <CgProfile className="text-3xl text-[#f40386]" />
+        </CardButton>
       </div>
     </div>
   );

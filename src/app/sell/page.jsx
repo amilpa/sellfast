@@ -1,36 +1,92 @@
 "use client";
 import InputElement from "../components/InputElement";
 import { useEffect, useRef, useState } from "react";
+import { getSession } from "next-auth/react";
 
-export default function page() {
-  const formData = useRef(new FormData());
+export default function Page() {
+  const formRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [descError, setDescError] = useState(false);
   const [imageerr, setImageerr] = useState(false);
 
-  function onChange(event) {
-    if (event.target.name === "name") {
-      formData.current.set("name", event.target.value);
-    } else if (event.target.name === "price") {
-      formData.current.set("price", event.target.value);
-    } else if (event.target.name === "desc") {
-      formData.current.set("desc", event.target.value);
+  // loading state
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(formRef.current);
+    if (!data.get("name")) {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+    if (!data.get("desc")) {
+      setDescError(true);
+    } else {
+      setDescError(false);
+    }
+    if (!data.get("image")) {
+      setImageerr(true);
+    } else {
+      setImageerr(false);
+    }
+    if (!/^\d+$/.test(data.get("price")) || data.get("price").length > 6) {
+      setPriceError(true);
+    } else {
+      setPriceError(false);
+    }
+    if (!nameError && !priceError && !descError && !imageerr) {
+      setLoading(true);
+      const session = await getSession();
+      data.set("user_id", session.user.id);
+      window.scrollTo(0, 0);
+      const response = await fetch("/api/products/add", {
+        method: "POST",
+        body: data,
+      });
+      const res = await response.json();
+      formRef.current.reset();
+      setLoading(false);
     }
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(formData.current);
-  }
-
   return (
-    <div className="w-full absolute top-[6rem] px-12 pb-8">
+    <div
+      className={`w-full h-full relative top-24 flex flex-col ${
+        loading ? "" : "px-8 pb-8"
+      }`}
+    >
+      {loading ? (
+        <div className="bg-black absolute inset-0 z-10 flex justify-center">
+          <div className="w-12 h-12 relative top-[30%] border-4 border-gray-400 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        ""
+      )}
       <h1 className="text-3xl font-semibold">Sell a product</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-8">
-        <InputElement label="Name" onChange={onChange} />
-        <InputElement label="Price" onChange={onChange} />
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-6 mt-8"
+      >
+        <InputElement label="Name" />
+        {nameError ? (
+          <span className="text-red-400 text-base -translate-y-4">
+            Please enter a valid name
+          </span>
+        ) : (
+          ""
+        )}
+        <InputElement label="Price" />
+        {priceError ? (
+          <span className="text-red-400 text-base -translate-y-4">
+            Please enter a valid price(maximum is 999999)
+          </span>
+        ) : (
+          ""
+        )}
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="desc" className="block">
             Description
@@ -40,9 +96,15 @@ export default function page() {
             id=""
             cols="30"
             rows="3"
-            className="bg-inherit outline-none text-base border-2 border-gray-800 focus:border-gray-600 rounded-sm py-1 pl-3"
-            onChange={onChange}
+            className="bg-inherit outline-none text-base border-2 border-gray-700 focus:border-gray-600 rounded-sm py-1 pl-3"
           ></textarea>
+          {descError ? (
+            <span className="text-red-400 text-base mt-1">
+              Description is required
+            </span>
+          ) : (
+            ""
+          )}
         </div>
         <div className="relative top-2 flex flex-col gap-2">
           <label htmlFor="fileInput">Upload image</label>
@@ -51,10 +113,19 @@ export default function page() {
             type="file"
             accept=".png,.jpg,.jpeg"
             className=""
-            onChange={onChange}
           />
         </div>
-        <button type="submit" className="text-white">
+        {imageerr ? (
+          <span className="text-red-400 text-base -translate-y-2">
+            Please select an image to upload
+          </span>
+        ) : (
+          ""
+        )}
+        <button
+          type="submit"
+          className="text-gray-200 mt-4 py-2 font-medium transition-all duration-300 bg-blue-700 hover:bg-blue-600"
+        >
           Submit
         </button>
       </form>

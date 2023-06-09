@@ -21,8 +21,8 @@ export default async function Page() {
     .then((data) => data[0])
     .catch((error) => console.log(error.message));
   return (
-    <div className="w-max absolute top-[17%] left-1/2 -translate-x-1/2 -z-20">
-      <div className="mt-14 flex items-center gap-24 px-8 pb-12 border-b-[1px] border-b-[rgba(255,255,255,0.5)]">
+    <div className="w-max absolute top-16 md:top-[17%] left-1/2 -translate-x-1/2 -z-20">
+      <div className="mt-14 flex flex-col md:flex-row items-center gap-24 px-8 pb-12 border-b-[1px] border-b-[rgba(255,255,255,0.5)]">
         <div>
           <ProfileIcon session={session} />
           <h1 className="text-2xl text-center font-medium mt-5">
