@@ -8,9 +8,7 @@ export default function Page({ params }) {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.id}`
-      );
+      const res = await fetch("/api/products/${params.id}");
       const json = await res.json();
       setData(json.data);
       console.log(json.data);
@@ -23,8 +21,9 @@ export default function Page({ params }) {
       ignore = true;
     };
   }, [params.id]);
+
   return (
-    <div className="absolute top-[20%] left-1/2 -translate-x-1/2 grid grid-cols-2 place-items-center">
+    <div className="w-full absolute top-[27%] flex justify-evenly gap-16 pb-12 border-b-[1px] border-gray-500">
       {loading ? (
         <div className="bg-black absolute inset-0 z-10 flex justify-center">
           <div className="w-12 h-12 relative top-[30%] border-4 border-gray-400 border-dashed rounded-full animate-spin"></div>
@@ -33,20 +32,21 @@ export default function Page({ params }) {
         ""
       )}
       <div className="flex flex-col gap-5">
-        <h1 className="text-3xl text-center font-medium">{data.name}</h1>
         <Image
           src={data.imageurl}
           alt="product image"
-          width={250}
-          height={250}
+          width={450}
+          height={450}
           className="rounded-lg"
         />
       </div>
-      <div>
-        <p>{data.description}</p>
-        <div>
-          <button>Buy item</button>
-        </div>
+      <div className="relative border-l-[1px] border-green-700 pl-24">
+        <h1 className="text-3xl font-medium mb-2">{data.name}</h1>
+        <p className="text-lg text-gray-300 mb-2">{data.description}</p>
+        <p className="text-3xl text-green-400">${data.price}</p>
+        <button className="mt-4 transition-all duration-300 text-xl py-2 px-4 bg-blue-600 hover:bg-blue-500">
+          Buy item
+        </button>
       </div>
     </div>
   );
