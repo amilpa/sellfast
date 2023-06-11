@@ -26,16 +26,13 @@ export default function EditCard({ userId, point }) {
     } else {
       setCorrect(true);
     }
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user/budget/`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ balance: input, userId }),
-      }
-    );
+    const res = await fetch("/api/user/budget/", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ balance: input, userId }),
+    });
     setIsEditing(!isEditing);
   }
 

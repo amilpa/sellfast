@@ -11,7 +11,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn(data) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/register`, {
+      const res = await fetch("/api/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
