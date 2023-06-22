@@ -1,16 +1,14 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import checkAuth from "@/utils/checkAuth";
 import { redirect } from "next/navigation";
-import CardButton from "../components/Cards/CardButton";
+
+import CardButton from "../../components/Cards/CardButton";
 import { MdSell } from "react-icons/md";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 
-export default async function page() {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return redirect("/login");
-  }
+export default async function Page() {
+  const isAuth = await checkAuth();
+  if (!isAuth) return redirect("/login");
 
   return (
     <div className="absolute top-[14%] md:top-[22%] -z-20 inset-0 ">

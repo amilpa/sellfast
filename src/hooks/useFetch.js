@@ -25,18 +25,20 @@ function reducer(state, { type, payload }) {
   }
 }
 
-export default function useFetch(url) {
+export default function useFetch(url, options) {
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
-    dispatch({ type: ACTIONS.MAKE_REQUEST })
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
+    async function fetchData() {
+      try {
+        dispatch({ type: ACTIONS.MAKE_REQUEST })
+        const res = await fetch(url, options)
+        const data = await res.json()
         dispatch({ type: ACTIONS.GET_DATA, payload: { data: data.data } })
-      })
-      .catch(error => {
+      } catch (error) {
         dispatch({ type: ACTIONS.ERROR, payload: { error } })
-      })
-  }, [url])
+      }
+    }
+    fetchData()
+  }, [url, options])
   return state;
 }

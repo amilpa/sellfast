@@ -1,5 +1,5 @@
 "use client";
-import InputElement from "../components/InputElement";
+import InputElement from "../../components/InputElement";
 import { useEffect, useRef, useState } from "react";
 import { getSession } from "next-auth/react";
 
@@ -40,7 +40,7 @@ export default function Page() {
     if (!nameError && !priceError && !descError && !imageerr) {
       setLoading(true);
       const session = await getSession();
-      data.set("user_id", session.user.id);
+      data.set("soldBy", session.user.id);
       window.scrollTo(0, 0);
       const response = await fetch("/api/products/add", {
         method: "POST",

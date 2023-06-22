@@ -1,15 +1,13 @@
-import SignInButton from "./components/SignInButton";
-import SignOutButton from "./components/SignOutButton";
+import SignInButton from "../components/SignInButton";
+import SignOutButton from "../components/SignOutButton";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import checkAuth from "@/utils/checkAuth";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect("/login");
-  } else {
-    redirect("/dashboard");
+  const isAuth = await checkAuth();
+  if (isAuth) {
+    return redirect("/dashboard");
   }
+  return redirect("/login");
 }

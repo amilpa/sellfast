@@ -15,7 +15,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "Upload Failed" })
     }
     else {
-      await addProduct({ product_id: generateUnique(), name: data.get("name"), description: data.get("desc"), imageurl: upload.url, price: data.get("price"), user_id: data.get("user_id") })
+      await addProduct({ product_id: generateUnique(), name: data.get("name"), description: data.get("desc"), imageurl: upload.url, price: data.get("price"), soldBy: data.get("soldBy") })
     }
     return NextResponse.json({ message: "Successful" })
   } catch (error) {

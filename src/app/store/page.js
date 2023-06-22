@@ -1,12 +1,11 @@
+import checkAuth from "@/utils/checkAuth";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import Display from "../components/Store/Display";
+import Display from "../../components/Store/Display";
 
-export default function Page() {
-  const session = getServerSession(authOptions)
-  if (!session) {
+export default async function Page() {
+  const isAuth = await checkAuth()
+  if (!isAuth) {
     redirect("/login")
   }
 

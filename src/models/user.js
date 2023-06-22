@@ -8,7 +8,7 @@ export async function createUserSignUp({ id, name, email, image }) {
 
 export async function getUser({ id }) {
   const data = await pool.query(`SELECT * from user_data WHERE user_id='${id}'`)
-  return data
+  return data.rows[0]
 }
 
 export async function checkUserRegister({ email }) {

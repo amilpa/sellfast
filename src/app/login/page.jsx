@@ -1,13 +1,14 @@
+import GoogleSignIn from "../../components/StyledButtons/GoogleSignIn";
+
+import checkAuth from "@/utils/checkAuth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import GoogleSignIn from "../components/StyledButtons/GoogleSignIn";
-import { getServerSession } from "next-auth";
 
 export default async function Login() {
-  const session = await getServerSession(authOptions);
-  if (session) {
+  const isAuth = await checkAuth();
+  if (isAuth) {
     return redirect("/dashboard");
   }
+
   return (
     <div className="min-h-screen">
       <div className="w-max absolute top-[30%] md:top-[25%] left-1/2 -translate-x-1/2">
