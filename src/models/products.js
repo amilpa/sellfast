@@ -4,14 +4,14 @@ import { pool } from "@/config/postgres";
 
 //get all products
 export async function getAllProducts() {
-  const data = await pool.query("SELECT * from products");
+  const data = await pool.query("SELECT * from products WHERE boughtBy IS NULL");
   return data.rows;
 }
 
 //get products by name 
 export async function getProductsByName(name) {
   const data = await pool.query(
-    "SELECT * from products WHERE LOWER(name) LIKE $1",
+    "SELECT * from products WHERE LOWER(name) LIKE $1 AND boughtBy IS NULL",
     ["%" + name.toLowerCase() + "%"]
   );
   return data.rows;
@@ -38,5 +38,14 @@ export async function getProductById(id) {
   const data = await pool.query("SELECT * from products WHERE product_id=$1", [
     id,
   ]);
+  return data.rows[0];
+}
+
+//update product boughtBy field
+export async function updateProductBoughtBy({ id, boughtBy }) {
+  const data = await pool.query(
+    "UPDATE products SET boughtBy=$1 WHERE product_id=$2 RETURNING *",
+    [boughtBy, id]
+  );
   return data.rows[0];
 }

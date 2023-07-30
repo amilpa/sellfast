@@ -30,20 +30,29 @@ export default function Page({ params }) {
       alert("You need to login to buy this item");
       return;
     }
+    setLoading(true);
     const res = await fetch(`/api/products/buy/${params.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: session.user.id, price: data.price }),
+      body: JSON.stringify({
+        id: session.user.id,
+        price: data.price,
+        soldBy: data.soldby,
+      }),
     });
     const json = await res.json();
     if (json.error) {
       alert(json.error);
+      setLoading(false);
       return;
     }
+    setLoading(false);
     alert("Item bought successfully");
   }
+
+  console.log(data);
 
   return (
     <div className="w-full absolute top-[27%] flex justify-evenly gap-16 pb-12 border-b-[1px] border-gray-500">

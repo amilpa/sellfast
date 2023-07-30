@@ -1,7 +1,7 @@
 import { getUser } from "@/models/user";
 import { NextResponse } from "next/server";
 
-export async function GET(request, context) {
+export async function GET(req, res, context) {
   try {
     const user = await getUser({ id: context.params.id })
     return NextResponse.json(user)

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import EditCard from "../../components/Cards/EditCard";
 import ProfileIcon from "../../components/ProfIleIcon";
 import RatingCard from "../../components/Cards/RatingCard";
+// import ShowProducts from "@/components/ShowProducts";
 
 export default async function Page() {
   const session = await checkAuth();
@@ -32,6 +33,7 @@ export default async function Page() {
         <EditCard userId={user.user_id} point={user.balance} />
         <RatingCard point={user.rating} />
       </div>
+      {/* <ShowProducts userId={user.user_id} /> */}
     </div>
   );
 }
