@@ -6,7 +6,7 @@ export async function POST(req) {
     const res = await req.json()
     const check = await checkUserRegister({ email: res.email })
     if (!check) {
-      await createUserSignUp(res)
+      const data = await createUserSignUp(res)
     }
     return NextResponse.json({ message: "Success" })
 
