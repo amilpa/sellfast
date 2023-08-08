@@ -1,8 +1,15 @@
 import { pool } from "@/config/postgres";
 
+// with foreign key and varchar
 // CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy varchar(21) NOT NULL,boughtBy varchar(21) NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id),FOREIGN KEY (boughtBy) REFERENCES user_data(user_id))
 
-//get all products
+// with foreign key and INT
+// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy INT NOT NULL,boughtBy INT NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id),FOREIGN KEY (boughtBy) REFERENCES user_data(user_id))
+
+// without foreign key and INT
+// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy INT NOT NULL, boughtBy INT NULL,KEY soldBy_idx (soldBy),KEY boughtBy_idx (boughtBy))
+
+//get all products not bought
 export async function getAllProducts() {
   const data = await pool.query("SELECT * from products WHERE boughtBy IS NULL");
   return data.rows;
@@ -38,6 +45,15 @@ export async function getProductById(id) {
   const data = await pool.query("SELECT * from products WHERE product_id=$1", [
     id,
   ]);
+  return data.rows[0];
+}
+
+//get products by buyer
+export async function getProductsByBuyer(buyer) {
+  const data = await pool.query(
+    "SELECT * from products WHERE boughtBy=$1",
+    [buyer]
+  );
   return data.rows[0];
 }
 
