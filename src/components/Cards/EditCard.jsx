@@ -4,7 +4,6 @@ import { AiFillEdit, AiOutlineDollar } from "react-icons/ai";
 import { BsCheckLg } from "react-icons/bs";
 
 export default function EditCard({ userId, point }) {
-  console.log(point);
   const [isEditing, setIsEditing] = useState(false);
   let pointInitial = 0;
   if (point) {
@@ -27,7 +26,7 @@ export default function EditCard({ userId, point }) {
     } else {
       setCorrect(true);
     }
-    const res = await fetch("/api/user/budget/", {
+    const res = await fetch("/api/user/budget", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

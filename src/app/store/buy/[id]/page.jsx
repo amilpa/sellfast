@@ -2,12 +2,15 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
 
   const { data: session } = useSession();
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -23,6 +26,13 @@ export default function Page({ params }) {
       ignore = true;
     };
   }, [params.id]);
+
+  useEffect(() => {
+    if (data && data.boughtby) {
+      alert("This item is already bought");
+      router.push("/store");
+    }
+  }, [loading, data, router]);
 
   async function handleBuy(e) {
     e.preventDefault();
@@ -49,10 +59,9 @@ export default function Page({ params }) {
       return;
     }
     setLoading(false);
+    router.push("/store");
     alert("Item bought successfully");
   }
-
-  console.log(data);
 
   return (
     <div className="w-full absolute top-[27%] flex justify-evenly gap-16 pb-12 border-b-[1px] border-gray-500">

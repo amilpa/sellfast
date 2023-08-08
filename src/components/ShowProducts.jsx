@@ -2,14 +2,15 @@
 import { useEffect, useState } from "react";
 
 export default function ShowProducts(user_id) {
-
   const [borderChange, setBorderChange] = useState(false);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(["Hello world"]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`/api/products/${user_id}`);
+      const res = await fetch(
+        `/api/products/${borderChange ? "sold" : "bought"}/${user_id}`
+      );
       const json = await res.json();
       setData(json.data);
     }
@@ -19,7 +20,7 @@ export default function ShowProducts(user_id) {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [borderChange, user_id]);
 
   return (
     <div>
@@ -33,11 +34,11 @@ export default function ShowProducts(user_id) {
         <div className="bg-black absolute inset-0 z-10 flex justify-center">
           <div className="w-12 h-12 relative top-[30%] border-4 border-gray-400 border-dashed rounded-full animate-spin"></div>
         </div>
-      ) : 
-        ({data.map((item) => {
-          return (<div>Hello world</div>)
-      })})
-    }
+      ) : (
+        data.map((item) => {
+          return <div key={item.id}>Hello world</div>;
+        })
+      )}
     </div>
   );
 }
