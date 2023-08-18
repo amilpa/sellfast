@@ -11,11 +11,13 @@ import { pool } from "@/config/postgres";
 
 //get all products not bought
 export async function getAllProducts() {
-  const data = await pool.query("SELECT * from products WHERE boughtBy IS NULL");
+  const data = await pool.query(
+    "SELECT * from products WHERE boughtBy IS NULL"
+  );
   return data.rows;
 }
 
-//get products by name 
+//get products by name
 export async function getProductsByName(name) {
   const data = await pool.query(
     "SELECT * from products WHERE LOWER(name) LIKE $1 AND boughtBy IS NULL",
@@ -50,11 +52,18 @@ export async function getProductById(id) {
 
 //get products by buyer
 export async function getProductsByBuyer(buyer) {
-  const data = await pool.query(
-    "SELECT * from products WHERE boughtBy=$1",
-    [buyer]
-  );
-  return data.rows[0];
+  const data = await pool.query("SELECT * from products WHERE boughtBy=$1", [
+    buyer,
+  ]);
+  return data.rows;
+}
+
+//get products by seller
+export async function getProductsBySeller(seller) {
+  const data = await pool.query("SELECT * from products WHERE soldBy=$1", [
+    seller,
+  ]);
+  return data.rows;
 }
 
 //update product boughtBy field
