@@ -5,11 +5,7 @@ import { BsCheckLg } from "react-icons/bs";
 
 export default function EditCard({ userId, point }) {
   const [isEditing, setIsEditing] = useState(false);
-  let pointInitial = 0;
-  if (point) {
-    pointInitial = point;
-  }
-  const [input, setInput] = useState(pointInitial);
+  const [input, setInput] = useState(point);
   const [correct, setCorrect] = useState(true);
 
   const inputRef = useRef();

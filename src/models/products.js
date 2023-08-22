@@ -1,26 +1,22 @@
 import { pool } from "@/config/postgres";
+import { v4 as uuidv4 } from "uuid";
 
 // with foreign key and varchar
-// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy varchar(21) NOT NULL,boughtBy varchar(21) NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id),FOREIGN KEY (boughtBy) REFERENCES user_data(user_id))
+// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NOT NULL,quantity INT NOT NULL,rating INT NULL,imageurl varchar(300) NOT NULL,price INT NOT NULL,soldBy varchar(21) NOT NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id))
 
-// with foreign key and INT
-// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy INT NOT NULL,boughtBy INT NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id),FOREIGN KEY (boughtBy) REFERENCES user_data(user_id))
+// transactions
+// CREATE TABLE IF NOT EXISTS transaction(transaction_id char(36) PRIMARY KEY,product_id INT NOT NULL,amount_transferred INT NOT NULL,buyer varchar(21) NOT NULL,FOREIGN KEY (product_id) REFERENCES products(product_id),FOREIGN KEY (buyer) REFERENCES user_data(user_id))
 
-// without foreign key and INT
-// CREATE TABLE IF NOT EXISTS products(product_id INT PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NULL,imageurl varchar(300) NULL,price INT NOT NULL,soldBy INT NOT NULL, boughtBy INT NULL,KEY soldBy_idx (soldBy),KEY boughtBy_idx (boughtBy))
-
-//get all products not bought
+//get all products not sold out
 export async function getAllProducts() {
-  const data = await pool.query(
-    "SELECT * from products WHERE boughtBy IS NULL"
-  );
+  const data = await pool.query("SELECT * FROM PRODUCTS WHERE quantity > 0");
   return data.rows;
 }
 
 //get products by name
 export async function getProductsByName(name) {
   const data = await pool.query(
-    "SELECT * from products WHERE LOWER(name) LIKE $1 AND boughtBy IS NULL",
+    "SELECT * from products WHERE LOWER(name) LIKE $1 AND quantity > 0",
     ["%" + name.toLowerCase() + "%"]
   );
   return data.rows;
@@ -34,6 +30,7 @@ export async function addProduct(product) {
       product.product_id,
       product.name,
       product.description,
+      product.quantity,
       product.imageurl,
       product.price,
       product.soldBy,
@@ -52,9 +49,10 @@ export async function getProductById(id) {
 
 //get products by buyer
 export async function getProductsByBuyer(buyer) {
-  const data = await pool.query("SELECT * from products WHERE boughtBy=$1", [
-    buyer,
-  ]);
+  const data = await pool.query(
+    "SELECT products.* FROM products JOIN transaction ON products.product_id = transaction.product_id WHERE transaction.buyer=$1",
+    [buyer]
+  );
   return data.rows;
 }
 
@@ -66,11 +64,13 @@ export async function getProductsBySeller(seller) {
   return data.rows;
 }
 
-//update product boughtBy field
-export async function updateProductBoughtBy({ id, boughtBy }) {
-  const data = await pool.query(
-    "UPDATE products SET boughtBy=$1 WHERE product_id=$2 RETURNING *",
-    [boughtBy, id]
-  );
+//add new transaction
+export async function updateProductBoughtBy({ id, buyer, amount }) {
+  const data = await pool.query("INSERT INTO transaction values($1,$2,$3,$4)", [
+    uuidv4(),
+    id,
+    amount,
+    buyer,
+  ]);
   return data.rows[0];
 }
