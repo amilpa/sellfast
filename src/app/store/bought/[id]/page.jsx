@@ -1,12 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+import { BsCheckLg } from "react-icons/bs";
+
 export default function Page({ params }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+  const [show, setShow] = useState(false);
+
+  const [rating, setRating] = useState(0);
 
   const { data: session } = useSession();
 
@@ -30,19 +35,23 @@ export default function Page({ params }) {
   async function handleRate(e) {
     e.preventDefault();
     if (!session) {
-      alert("You need to login to buy this item");
+      alert("You need to login to rate this item");
+      return;
+    }
+    // check if rating is valid between 0 and 5 and it is a number
+    if (!/^\d+$/.test(rating) || rating < 0 || rating > 5) {
+      alert("Rating must be a number between 0 and 5");
       return;
     }
     setLoading(true);
-    const res = await fetch(`/api/products/buy/${params.id}`, {
+    const res = await fetch(`/api/products/bought/${params.id}/rate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: session.user.id,
-        price: data.price,
-        soldBy: data.soldby,
+        rating,
+        user_id: session.user.id,
       }),
     });
     const json = await res.json();
@@ -52,8 +61,9 @@ export default function Page({ params }) {
       return;
     }
     setLoading(false);
-    router.push("/store");
-    alert("Item bought successfully");
+    setShow(false);
+    router.push("/profile");
+    alert("Successfully rated the item");
   }
 
   return (
@@ -78,12 +88,26 @@ export default function Page({ params }) {
         <h1 className="text-3xl font-medium mb-2">{data.name}</h1>
         <p className="text-lg text-gray-300 mb-2">{data.description}</p>
         <p className="text-3xl text-green-400">${data.price}</p>
-        <button
-          onClick={handleRate}
-          className="mt-4 transition-all duration-300 text-xl py-2 px-4 bg-yellow-600 hover:bg-yellow-500"
-        >
-          Rate item
-        </button>
+        {show ? (
+          <div className="mt-4 flex items-center">
+            <input
+              type="text"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              className="w-12 h-12 pl-1 bg-black text-xl text-white border-2 border-gray-500 outline-none mr-2"
+            />
+            <button onClick={handleRate}>
+              <BsCheckLg className="text-3xl cursor-pointer" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShow(true)}
+            className="mt-4 transition-all duration-300 text-xl py-2 px-4 bg-yellow-600 hover:bg-yellow-500"
+          >
+            Rate item
+          </button>
+        )}
       </div>
     </div>
   );

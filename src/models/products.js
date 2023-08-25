@@ -2,7 +2,7 @@ import { pool } from "@/config/postgres";
 import { v4 as uuidv4 } from "uuid";
 
 // with foreign key and varchar
-// CREATE TABLE IF NOT EXISTS products(product_id char(36) PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NOT NULL,quantity INT NOT NULL,rating INT NULL,imageurl varchar(300) NOT NULL,price INT NOT NULL,soldBy varchar(21) NOT NULL,FOREIGN KEY (soldBy) REFERENCES user_data(user_id))
+// CREATE TABLE IF NOT EXISTS products(product_id char(36) PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NOT NULL,quantity INT NOT NULL,rating DECIMAL(3,2) NULL,imageurl varchar(300) NOT NULL,price INT NOT NULL,soldby varchar(21) NOT NULL,FOREIGN KEY (soldby) REFERENCES user_data(user_id))
 
 // transactions
 // CREATE TABLE IF NOT EXISTS transaction(transaction_id char(36) PRIMARY KEY,product_id char(36) NOT NULL,amount_transferred INT NOT NULL,buyer varchar(21) NOT NULL,FOREIGN KEY (product_id) REFERENCES products(product_id),FOREIGN KEY (buyer) REFERENCES user_data(user_id))

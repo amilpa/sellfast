@@ -34,3 +34,9 @@ export async function updateUserBalance({ balance, user_id }) {
     `UPDATE user_data SET balance = ${balance} WHERE user_id = '${user_id}'`
   );
 }
+
+export async function updateUserRating({ rating, user_id }) {
+  await pool.query(
+    `UPDATE user_data SET rating = ${rating} WHERE user_id = '${user_id}'`
+  );
+}
