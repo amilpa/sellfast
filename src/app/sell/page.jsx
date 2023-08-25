@@ -1,13 +1,19 @@
 "use client";
 import InputElement from "../../components/InputElement";
 import { useEffect, useRef, useState } from "react";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
   const formRef = useRef(null);
 
+  const { data: session } = useSession();
+
+  if (!session) {
+  }
+
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
+  const [quantityError, setQuantityError] = useState(false);
   const [descError, setDescError] = useState(false);
   const [imageerr, setImageerr] = useState(false);
 
@@ -37,16 +43,26 @@ export default function Page() {
     } else {
       setPriceError(false);
     }
+    if (
+      !/^\d+$/.test(data.get("quantity")) ||
+      data.get("quantity") < 1 ||
+      data.get("quantity") > 1000
+    ) {
+      setQuantityError(true);
+    } else {
+      setQuantityError(false);
+    }
     if (!nameError && !priceError && !descError && !imageerr) {
       setLoading(true);
-      const session = await getSession();
       data.set("soldBy", session.user.id);
       window.scrollTo(0, 0);
+      console.log(data);
       const response = await fetch("/api/products/add", {
         method: "POST",
         body: data,
       });
       const res = await response.json();
+      console.log(res);
       formRef.current.reset();
       setLoading(false);
     }
@@ -83,6 +99,14 @@ export default function Page() {
         {priceError ? (
           <span className="text-red-400 text-base -translate-y-4">
             Please enter a valid price(maximum is 999999)
+          </span>
+        ) : (
+          ""
+        )}
+        <InputElement label="Quantity" />
+        {quantityError ? (
+          <span className="text-red-400 text-base -translate-y-4">
+            Please enter a valid quantity(from 1 to 1000)
           </span>
         ) : (
           ""

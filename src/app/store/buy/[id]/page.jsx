@@ -49,6 +49,7 @@ export default function Page({ params }) {
       body: JSON.stringify({
         id: session.user.id,
         price: data.price,
+        quantity: data.quantity,
         soldBy: data.soldby,
       }),
     });
@@ -84,7 +85,10 @@ export default function Page({ params }) {
       <div className="relative border-l-[1px] border-green-700 pl-24">
         <h1 className="text-3xl font-medium mb-2">{data.name}</h1>
         <p className="text-lg text-gray-300 mb-2">{data.description}</p>
-        <p className="text-3xl text-green-400">${data.price}</p>
+        <p className="text-3xl text-green-400">{data.price}</p>
+        <p className="text-xl text-yellow-400">
+          Rating: {data.rating ? data.rating : "Not yet rated"}
+        </p>
         <button
           onClick={handleBuy}
           className="mt-4 transition-all duration-300 text-xl py-2 px-4 bg-blue-600 hover:bg-blue-500"

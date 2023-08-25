@@ -9,7 +9,6 @@ export default function RatingCard({ point }) {
         <span className="text-white font-medium mr-2">Rating</span>
       </h1>
       <h1 className="text-3xl">{showPoint} points</h1>
-      <AiOutlineArrowRight className="absolute right-6 top-7 text-xl" />
     </div>
   );
 }
