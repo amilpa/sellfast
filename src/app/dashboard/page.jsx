@@ -32,7 +32,7 @@ export default async function Page() {
         </CardButton>
         <CardButton
           title="Profile"
-          content="Buy fast and safe.We have a wide variety of goods available this week."
+          content="See your profile stats,bought and sold products and much more."
           href="/profile"
         >
           <CgProfile className="text-3xl text-[#f40386]" />

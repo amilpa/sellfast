@@ -1,7 +1,7 @@
 import { pool } from "@/config/postgres";
 
 // with varchar pk
-// CREATE TABLE IF NOT EXISTS user_data(user_id char(21) PRIMARY KEY,name varchar(20) NOT NULL,email varchar(30) UNIQUE NOT NULL,imageURL varchar(300) NULL,balance INT DEFAULT 0,rating INT NULL)
+// CREATE TABLE IF NOT EXISTS user_data(user_id char(21) PRIMARY KEY,name varchar(20) NOT NULL,email varchar(30) UNIQUE NOT NULL,imageURL varchar(300) NULL,balance INT DEFAULT 0,rating DECIMAL(3,2) NULL)
 
 export async function createUserSignUp({ id, name, email, image }) {
   const data = await pool.query(

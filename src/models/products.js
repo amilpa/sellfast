@@ -2,7 +2,7 @@ import { pool } from "@/config/postgres";
 import { v4 as uuidv4 } from "uuid";
 
 // with foreign key and varchar
-// CREATE TABLE IF NOT EXISTS products(product_id char(36) PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NOT NULL,quantity INT NOT NULL,rating DECIMAL(3,2) NULL,imageurl varchar(300) NOT NULL,price INT NOT NULL,soldby varchar(21) NOT NULL,FOREIGN KEY (soldby) REFERENCES user_data(user_id))
+// CREATE TABLE IF NOT EXISTS products(product_id char(36) PRIMARY KEY,name varchar(30) NOT NULL,description varchar(200) NOT NULL,quantity INT NOT NULL,units_sold INT NOT NULL DEFAULT 0,rating DECIMAL(3,2) NULL,imageurl varchar(300) NOT NULL,price INT NOT NULL,soldby varchar(21) NOT NULL,FOREIGN KEY (soldby) REFERENCES user_data(user_id))
 
 // transactions
 // CREATE TABLE IF NOT EXISTS transaction(transaction_id char(36) PRIMARY KEY,product_id char(36) NOT NULL,amount_transferred INT NOT NULL,buyer varchar(21) NOT NULL,FOREIGN KEY (product_id) REFERENCES products(product_id),FOREIGN KEY (buyer) REFERENCES user_data(user_id))
@@ -47,10 +47,10 @@ export async function getProductById(id) {
   return data.rows[0];
 }
 
-//get products by buyer
-export async function getBoughtProducts(buyer) {
+//get unique products * from product by buyer id
+export async function getUniqueProductsByBuyer(buyer) {
   const data = await pool.query(
-    "SELECT products.* FROM products JOIN transaction ON products.product_id = transaction.product_id WHERE transaction.buyer=$1",
+    "SELECT DISTINCT ON (products.product_id) * from products INNER JOIN transaction ON products.product_id=transaction.product_id WHERE buyer=$1",
     [buyer]
   );
   return data.rows;
@@ -81,10 +81,19 @@ export async function getTransactionByBuyerAndProduct(buyer, product) {
     "SELECT * from transaction WHERE buyer=$1 AND product_id=$2",
     [buyer, product]
   );
+  return data.rows;
+}
+
+// update product quantity and increment units sold
+export async function updateProduct({ quantity, product_id }) {
+  const data = await pool.query(
+    "UPDATE products SET quantity=$1,units_sold=units_sold+1 WHERE product_id=$2",
+    [quantity, product_id]
+  );
   return data.rows[0];
 }
 
-// update product quantity
+//update product quantity
 export async function updateProductQuantity({ quantity, product_id }) {
   const data = await pool.query(
     "UPDATE products SET quantity=$1 WHERE product_id=$2",

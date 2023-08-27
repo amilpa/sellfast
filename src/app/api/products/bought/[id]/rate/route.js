@@ -25,6 +25,7 @@ export async function POST(req, { params }) {
   const user = await getUser({ id: data.soldby });
   if (user.rating) {
     user.rating = (parseInt(user.rating) + parseInt(rating)) / 2;
+    console.log(user.rating);
   } else {
     user.rating = rating;
   }

@@ -1,6 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, createRef } from "react";
 import Link from "next/link";
+
+import { AiFillEdit } from "react-icons/ai";
 
 export default function ShowProducts(user_id) {
   const [borderChange, setBorderChange] = useState(false);
@@ -54,7 +56,7 @@ export default function ShowProducts(user_id) {
           <div className="w-12 h-12 border-4 border-gray-400 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
-        data.map((item) => {
+        data.map((item, index) => {
           if (borderChange)
             return (
               <div
@@ -62,9 +64,15 @@ export default function ShowProducts(user_id) {
                 className="transition-all flex justify-between border-2 border-gray-700  p-2 mb-4 rounded-md"
               >
                 <h1 className="text-xl">{item.name}</h1>
-                <h1 className="text-xl">
-                  {item.boughtby ? "Sold" : "Not sold"}
-                </h1>
+                <div className="flex gap-2">
+                  <h1 className="text-xl">Stock left : {item.quantity}</h1>
+                  <Link
+                    href={`/store/sold/${item.product_id}`}
+                    className="text-green grid place-items-center border-[1px] border-white px-1"
+                  >
+                    <AiFillEdit />
+                  </Link>
+                </div>
               </div>
             );
           else {

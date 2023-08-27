@@ -65,7 +65,7 @@ export default function Page({ params }) {
   }
 
   return (
-    <div className="w-full absolute top-[27%] flex justify-evenly gap-16 pb-12 border-b-[1px] border-gray-500">
+    <div className="w-full absolute top-[27%] flex flex-col md:flex-row px-12 md:px-0 justify-evenly gap-16 pb-12 border-b-[1px] border-gray-500">
       {loading ? (
         <div className="bg-black absolute inset-0 z-10 flex justify-center">
           <div className="w-12 h-12 relative top-[30%] border-4 border-gray-400 border-dashed rounded-full animate-spin"></div>
@@ -82,7 +82,7 @@ export default function Page({ params }) {
           className="rounded-lg"
         />
       </div>
-      <div className="relative border-l-[1px] border-green-700 pl-24">
+      <div className="relative border-t-[1px] md:border-t-0 md:border-l-[1px] border-blue-400 pt-6 md:pt-0 md:pl-24">
         <h1 className="text-3xl font-medium mb-2">{data.name}</h1>
         <p className="text-lg text-gray-300 mb-2">{data.description}</p>
         <p className="text-3xl text-green-400">{data.price}</p>
